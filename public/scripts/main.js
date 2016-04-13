@@ -1,7 +1,8 @@
 (function() {
 	"use strict";
-	//This is the game object
 	var settings;
+	
+	//This is the game object
 	var WeatherMan = {
 		//Game canvas
 		canvas: 0,
