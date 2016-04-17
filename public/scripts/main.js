@@ -62,6 +62,7 @@
     //Game canvas
     canvas: 0,
     ctx: 0,
+    interval: null,
     //Boundaries
     leftWall: 0,
     rightWall: 0,
@@ -133,6 +134,21 @@
                    console.log(WeatherMan.score);
                 }
                 coin.drawCoin();
+              
+
+                if (obstacle.x < (man.x + man.width) && obstacle.x > man.x) {
+                  if ((man.y + man.height) >= obstacle.y) {
+                    WeatherMan.stopLoop(); 
+                  }
+
+                }
+      },
+      stopLoop: function() {
+        clearInterval(this.interval);
+        WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
+        WeatherMan.ctx.font = "50px Arial";
+        WeatherMan.ctx.fillStyle = "#000066";
+        WeatherMan.ctx.fillText("Game Over, Score: " + WeatherMan.score, 100, 200);
       }
   };
   window.onload = function() {
