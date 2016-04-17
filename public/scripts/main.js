@@ -7,9 +7,11 @@
       width: 50,
       x: 50,
       y: 400,
+      inAir: 0,
+      gravity: 4,
+      velocity: 0,
 
     drawMan: function(e) {
-      console.log(man.y);
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       WeatherMan.ctx.beginPath();
       WeatherMan.ctx.rect(man.x, man.y, man.width, man.height);
@@ -18,12 +20,11 @@
       WeatherMan.ctx.closePath();
     },
     jump: function() {
-          console.log("jump");
-          if (man.y > 0) {
-            man.y -= 50;
+          if (man.inAir == 0) {
+            man.velocity = 30;
+            man.inAir = 1;
           }
-          man.drawMan();
-          }
+         }
   }
 
   //This is the game object
@@ -69,8 +70,19 @@
               WeatherMan.loop();
             }, 1000/25);
            },
-    startLoop: function() {
+    loop: function() {
                  //Start game loop, draw objects and stuff
+                 if (man.inAir == 1) {
+                    man.velocity = man.velocity - man.gravity;
+                    if (man.y - man.velocity < 400 ) {
+                      man.y = man.y - man.velocity;
+                    }
+                    else {
+                      man.y = 400;
+                      man.inAir = 0;
+                      man.velocity = 0;
+                    }
+                 }
                  man.drawMan();
                }
   };
