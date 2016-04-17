@@ -21,12 +21,28 @@
 			location: 0
 		},
 		init: function() {
+                        this.initListeners();
 			settings = this.settings;
 			WeatherMan.canvas = document.querySelector('canvas');
 			WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
 			//Enter gameLoop
 			var gameLoop = WeatherMan.startLoop();
 		},
+                jump: function() {
+                    console.log('Recognize jump');
+                },
+                initListeners: function() {
+                        window.addEventListener('keypress', function(e) {
+                                var key = e.keyCode;
+                                
+                                switch(key) {
+                                      case 32:
+                                          e.preventDefault();
+                                          WeatherMan.jump();
+
+                                }
+                        }, false);
+                },
 		startLoop: function() {
 			//Start game loop, draw objects and stuff
 
