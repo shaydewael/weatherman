@@ -34,21 +34,20 @@
     }
   }
   var man = {
-      height: 100,
-      width: 50,
+      height: 176,
+      width: 59,
       x: 100,
-      y: 400,
+      y: 324,
       inAir: 0,
       gravity: 4,
       velocity: 0,
 
     drawMan: function(e) {
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
-      WeatherMan.ctx.beginPath();
-      WeatherMan.ctx.rect(man.x, man.y, man.width, man.height);
-      WeatherMan.ctx.fillStyle = "#3498db";
-      WeatherMan.ctx.fill();
-      WeatherMan.ctx.closePath();
+      var image = new Image();
+      image.src = "images/man.png";
+      WeatherMan.ctx.drawImage(image,man.x,man.y);
+      
     },
     jump: function() {
       if (man.inAir == 0) {
@@ -156,11 +155,11 @@
       //Start game loop, draw objects and stuff
       if (man.inAir == 1) {
         man.velocity = man.velocity - man.gravity;
-        if (man.y - man.velocity < 400 ) {
+        if (man.y - man.velocity < 324 ) {
           man.y = man.y - man.velocity;
         }
         else {
-          man.y = 400;
+          man.y = 324;
           man.inAir = 0;
           man.velocity = 0;
         }
