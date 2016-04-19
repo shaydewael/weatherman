@@ -77,22 +77,24 @@
       height: "500px",
       // Weather location
       latitude: null,
-      longitude: null
+      longitude: null,
+      weather_code: null
     },
     init: function() {
       this.initListeners();
       this.getLocation();
-      settings = this.settings;
+      settings = self.settings;
+
       WeatherMan.canvas = document.querySelector('canvas');
       WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
-      //Enter gameLoop
+      // Enter gameLoop
       var gameLoop = WeatherMan.startLoop();
     },
     initListeners: function() {
       window.addEventListener('keypress', function(e) {
         var key = e.keyCode;
 
-        switch(key) {
+        switch (key) {
           case 32:
             e.preventDefault();
             man.jump();
@@ -114,35 +116,36 @@
       }
 
       function error(err) {
-        alert("Location Broken!");
+        // TODO: Error getting location, make a default
       }
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success, error, options);
       }
       else {
-        // No location, make a default
+        // TODO: No location, make a default
       }
     },
     getWeather: function() {
+      var self = this;
       var options = {
         language: "en-US",
         units: "e"
       };
 
-      var url = 'https://9bec92cf-9cef-402d-ad65-5c87126bbfba:zsTVZpL1HO@twcservice.mybluemix.net';
-      var endPoint = '/api/weather/v2/observations/current';
-      var geocode =  "?geocode=" + encodeURIComponent(this.settings.latitude + "," + this.settings.longitude);
-      console.log(geocode);
-      var language = "&language=" + encodeURIComponent(options.language);
-      var units =  "&units=" + encodeURIComponent(options.units);
-      var callUrl = url + endPoint + geocode + language + units;
+      var location = {
+        latitude: this.settings.latitude,
+        longitude: this.settings.longitude
+      }
 
-      console.log(callUrl);
-
-      $.ajax({ url: callUrl, type: 'GET', success: function(result) {
-        console.log(result);
-      }});
+      $.get({
+        url: document.URL + 'weather',
+        contentType: "application/json; charset=utf-8",
+        data: location,
+        success: function(result) {
+          self.settings.weather_code = result.icon_code;
+        }
+      });
     },
     startLoop: function() {
       this.interval = setInterval(function() {
