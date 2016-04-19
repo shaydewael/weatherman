@@ -1,5 +1,6 @@
 (function() {
   "use strict";
+
   var settings;
   
   var coin = {
@@ -75,15 +76,12 @@
       width: "850px",
       height: "500px",
       // Weather location
-      location: {
-        latitude: null,
-        longitude: null
-      }
+      latitude: null,
+      longitude: null
     },
     init: function() {
       this.initListeners();
       this.getLocation();
-      console.log(this.settings);
       settings = this.settings;
       WeatherMan.canvas = document.querySelector('canvas');
       WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
@@ -110,8 +108,9 @@
       };
 
       function success(pos) {
-        self.settings.location.latitude = pos.coords.latitude.toFixed(2);
-        self.settings.location.longitude = pos.coords.longitude.toFixed(2);
+        self.settings.latitude = pos.coords.latitude.toFixed(2);
+        self.settings.longitude = pos.coords.longitude.toFixed(2);
+        self.getWeather();
       }
 
       function error(err) {
@@ -130,6 +129,20 @@
         language: "en-US",
         units: "e"
       };
+
+      var url = 'https://9bec92cf-9cef-402d-ad65-5c87126bbfba:zsTVZpL1HO@twcservice.mybluemix.net';
+      var endPoint = '/api/weather/v2/observations/current';
+      var geocode =  "?geocode=" + encodeURIComponent(this.settings.latitude + "," + this.settings.longitude);
+      console.log(geocode);
+      var language = "&language=" + encodeURIComponent(options.language);
+      var units =  "&units=" + encodeURIComponent(options.units);
+      var callUrl = url + endPoint + geocode + language + units;
+
+      console.log(callUrl);
+
+      $.ajax({ url: callUrl, type: 'GET', success: function(result) {
+        console.log(result);
+      }});
     },
     startLoop: function() {
       this.interval = setInterval(function() {
