@@ -77,7 +77,7 @@
       // Weather location
       latitude: null,
       longitude: null,
-      weather_code: null
+      weather: null
     },
     init: function() {
       this.initListeners();
@@ -115,14 +115,20 @@
       }
 
       function error(err) {
-        // TODO: Error getting location, make a default
+        // Default West Lafayette
+        self.settings.latitude = 40.43;
+        self.settings.longitude = 86.91;
+        self.getWeather();
       }
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success, error, options);
       }
       else {
-        // TODO: No location, make a default
+        // Default West Lafayette
+        self.settings.latitude = 40.43;
+        self.settings.longitude = 86.91;
+        self.getWeather();
       }
     },
     getWeather: function() {
@@ -142,7 +148,53 @@
         contentType: "application/json; charset=utf-8",
         data: location,
         success: function(result) {
-          self.settings.weather_code = result.icon_code;
+          /*
+            Code 1,2,3,23,35,36,37,39,41,43,44,45,46 - N/A
+            Code 4,38,47 - Thunderstorms
+            Code 5,6,7,8,10,17,18 - Sleet
+            Code 9,11,12,40 - Rain
+            Code 13,14,15,16,25,42 - Snow
+            Code 19,24 - Wind
+            Code 20,21,22 - Fog
+            Code 26,27,28,29,30 - Cloudy
+            Code 31,33 - Clear (Night)
+            Code 32,34 - Sunny
+          */
+          var code = result.icon_code;
+
+          if (code == 4 || code == 38 || code == 47) {
+            self.settings.weather = 'thunderstorm';
+          }
+          else if ((code >= 5 && code <= 10) || code == 17 || code == 18) {
+            self.settings.weather = 'sleet';
+          }
+          else if (code == 9 || code == 11 || code == 12 || code == 40) {
+            self.settings.weather = 'rain';
+          }
+          else if ((code >= 13 && code <= 16) || code == 25 || code == 42) {
+            self.settings.weather = 'snow';
+          }
+          else if (code == 20 || code == 21 || code == 22) {
+            self.settings.weather = 'fog';
+          }
+          else if (code == 19 || code == 24) {
+            self.settings.weather = 'wind';
+          }
+          else if (code >= 26 && code <= 30) {
+            self.settings.weather = 'cloudy';
+          }
+          else if (code == 31 || code == 33) {
+            self.settings.weather = 'clear';
+          }
+          else if (code == 32 || code == 34) {
+            self.settings.weather = 'sunny';
+          }
+          else {
+            // Default sunny
+            self.settings.weather = 'sunny';
+          }
+
+          console.log("Weather: " + self.settings.weather);
         }
       });
     },
