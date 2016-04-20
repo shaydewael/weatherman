@@ -108,7 +108,6 @@
       function success(pos) {
         self.settings.latitude = pos.coords.latitude.toFixed(2);
         self.settings.longitude = pos.coords.longitude.toFixed(2);
-        console.log(self.settings);
         self.getWeather();
       }
 
