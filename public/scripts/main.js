@@ -82,12 +82,9 @@
     init: function() {
       this.initListeners();
       this.getLocation();
-      settings = self.settings;
 
       WeatherMan.canvas = document.querySelector('canvas');
       WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
-      // Enter gameLoop
-      var gameLoop = WeatherMan.startLoop();
     },
     initListeners: function() {
       window.addEventListener('keypress', function(e) {
@@ -114,13 +111,14 @@
       function success(pos) {
         self.settings.latitude = pos.coords.latitude.toFixed(2);
         self.settings.longitude = pos.coords.longitude.toFixed(2);
+        console.log(self.settings);
         self.getWeather();
       }
 
       function error(err) {
         // Default West Lafayette
         self.settings.latitude = 40.43;
-        self.settings.longitude = 86.91;
+        self.settings.longitude = -86.91;
         self.getWeather();
       }
 
@@ -130,7 +128,7 @@
       else {
         // Default West Lafayette
         self.settings.latitude = 40.43;
-        self.settings.longitude = 86.91;
+        self.settings.longitude = -86.91;
         self.getWeather();
       }
     },
@@ -198,6 +196,8 @@
           }
 
           console.log("Weather: " + self.settings.weather);
+          settings = self.settings;
+          var gameLoop = WeatherMan.startLoop();
         }
       });
     },
