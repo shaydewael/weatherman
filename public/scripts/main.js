@@ -7,7 +7,7 @@
     radius: 20,
     y: 400,
     x: 850,
-    velocity: 4,
+    velocity: 5,
     
     drawCoin: function(e) {
       WeatherMan.ctx.beginPath();
@@ -99,6 +99,9 @@
             man.jump();
         }
       }, false);
+    },
+    randomInterval: function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min; 
     },
     getLocation: function() {
       var self = this;
@@ -222,17 +225,26 @@
       obstacle.x = obstacle.x - obstacle.velocity;
       if (obstacle.x < 0 ) {
         obstacle.x = 850;
+        obstacle.velocity = WeatherMan.randomInterval(10, 60)
+        obstacle.height = WeatherMan.randomInterval(25, 50);
+        obstacle.width = WeatherMan.randomInterval(25, 50);
+        obstacle.y = 500 - obstacle.height;
+        WeatherMan.score++;
       }
       if (obstacle.velocity > 60) {
         obstacle.acceleration = 0; 
       }
+      if ( obstacle.velocity < 60 && obstacle.acceleration < 1) {
+        obstacle.acceleration = .1;
+      }
+
       obstacle.drawObstacle();
 
       coin.x = coin.x - coin.velocity;
       if (coin.x < 150) {
         coin.x = 850;
-        WeatherMan.score++;
-        console.log(WeatherMan.score);
+        WeatherMan.score += 5;
+        coin.velocity = WeatherMan.randomInterval(1,10);
       }
       coin.drawCoin();
     
