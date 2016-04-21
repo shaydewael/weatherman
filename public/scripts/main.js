@@ -3,19 +3,20 @@
 
   var settings;
   var highscores;
+  var img;
+  var rand;
   
   var coin = {
     radius: 20,
     y: 400,
     x: 850,
     velocity: 5,
+    mult: 1.0,
     
     drawCoin: function(e) {
-      WeatherMan.ctx.beginPath();
-      WeatherMan.ctx.arc(coin.x, coin.y, coin.radius, 0, 2 * Math.PI);
-      WeatherMan.ctx.fillStyle = "#ffff00";
-      WeatherMan.ctx.fill();
-      WeatherMan.ctx.closePath();
+      img = new Image();
+      img.src = "images/snowflake.png";
+      WeatherMan.ctx.drawImage(img,coin.x,coin.y * coin.mult);
     }
   }
   var obstacle = {
@@ -45,14 +46,15 @@
 
     drawMan: function(e) {
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
-      var image = new Image();
-      image.src = "images/man.png";
-      WeatherMan.ctx.drawImage(image,man.x,man.y);
+      WeatherMan.setGradient(); 
+      img = new Image();
+      img.src = "images/man.png";
+      WeatherMan.ctx.drawImage(img,man.x,man.y);
       
     },
     jump: function() {
       if (man.inAir == 0) {
-        man.velocity = 30;
+        man.velocity = 40;
         man.inAir = 1;
       }
     }
@@ -87,6 +89,9 @@
   
       WeatherMan.canvas = document.querySelector('canvas');
       WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
+
+      WeatherMan.setGradient();
+
       WeatherMan.ctx.font = "40px Arial";
       WeatherMan.ctx.fillStyle = "#000066";
       WeatherMan.ctx.fillText("Welcome to WeatherMan!", 50, 50);
@@ -94,6 +99,17 @@
       WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 50, 250);
       WeatherMan.ctx.fillText("Each token you collect is 5 points", 50, 350);
       WeatherMan.ctx.fillText("Press Enter to Start Playing", 50, 450);
+    },
+    setGradient: function() {
+      var grd=WeatherMan.ctx.createLinearGradient(0,0,0,170);
+      grd.addColorStop(0,"#88b3be");
+      grd.addColorStop(1,"#b1d7de");
+
+      WeatherMan.ctx.fillStyle=grd;
+      WeatherMan.ctx.fillRect(0,0,850,500);
+      WeatherMan.ctx.fillStyle = "#f5f1f1";
+      WeatherMan.ctx.fillRect(0,492,850,8);
+
     },
     initListeners: function() {
       window.addEventListener('keypress', function(e) {
@@ -260,11 +276,21 @@
       obstacle.drawObstacle();
 
       coin.x = coin.x - coin.velocity;
+      
       if (coin.x < 150) {
         coin.x = 850;
         WeatherMan.score += 5;
         coin.velocity = WeatherMan.randomInterval(1,10);
+        rand = Math.random();
+        if (rand < 0.3) {
+          coin.mult = 0.4;
+        } else if (rand < 0.6) {
+          coin.mult = 0.7;
+        } else {
+          coin.mult = 1.0;
+        }
       }
+
       coin.drawCoin();
     
       if (obstacle.x < (man.x + man.width) && obstacle.x > man.x) {
