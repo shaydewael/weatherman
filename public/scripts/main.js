@@ -2,6 +2,7 @@
   "use strict";
 
   var settings;
+  var img;
   
   var coin = {
     radius: 20,
@@ -10,11 +11,9 @@
     velocity: 5,
     
     drawCoin: function(e) {
-      WeatherMan.ctx.beginPath();
-      WeatherMan.ctx.arc(coin.x, coin.y, coin.radius, 0, 2 * Math.PI);
-      WeatherMan.ctx.fillStyle = "#ffff00";
-      WeatherMan.ctx.fill();
-      WeatherMan.ctx.closePath();
+      img = new Image();
+      img.src = "images/snowflake.png";
+      WeatherMan.ctx.drawImage(img,coin.x,coin.y);
     }
   }
   var obstacle = {
@@ -44,9 +43,10 @@
 
     drawMan: function(e) {
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
-      var image = new Image();
-      image.src = "images/man.png";
-      WeatherMan.ctx.drawImage(image,man.x,man.y);
+      WeatherMan.setGradient(); 
+      img = new Image();
+      img.src = "images/man.png";
+      WeatherMan.ctx.drawImage(img,man.x,man.y);
       
     },
     jump: function() {
@@ -86,13 +86,28 @@
   
       WeatherMan.canvas = document.querySelector('canvas');
       WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
-      WeatherMan.ctx.font = "40px Arial";
+
+      WeatherMan.setGradient();    
+
+      WeatherMan.ctx.font = "30px Arial";
       WeatherMan.ctx.fillStyle = "#000066";
+
       WeatherMan.ctx.fillText("Welcome to WeatherMan!", 50, 50);
       WeatherMan.ctx.fillText("Please enable location on your browser", 50, 150);
       WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 50, 250);
       WeatherMan.ctx.fillText("Each token you collect is 5 points", 50, 350);
       WeatherMan.ctx.fillText("Press Enter to Start Playing", 50, 450);
+    },
+    setGradient: function() {
+      var grd=WeatherMan.ctx.createLinearGradient(0,0,0,170);
+      grd.addColorStop(0,"#88b3be");
+      grd.addColorStop(1,"#b1d7de");
+
+      WeatherMan.ctx.fillStyle=grd;
+      WeatherMan.ctx.fillRect(0,0,850,500);
+      WeatherMan.ctx.fillStyle = "#F9F9F9";
+      WeatherMan.ctx.fillRect(0,490,850,10);
+
     },
     initListeners: function() {
       window.addEventListener('keypress', function(e) {
@@ -221,6 +236,7 @@
     },
     loop: function() {
       //Start game loop, draw objects and stuff
+
       if (man.inAir == 1) {
         man.velocity = man.velocity - man.gravity;
         if (man.y - man.velocity < 324 ) {
