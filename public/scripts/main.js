@@ -2,6 +2,7 @@
   "use strict";
 
   var settings;
+  var highscores;
   
   var coin = {
     radius: 20,
@@ -208,7 +209,6 @@
             self.settings.weather = 'sunny';
           }
 
-          console.log("Weather: " + self.settings.weather);
           settings = self.settings;
         }
       });
@@ -268,6 +268,26 @@
     },
     stopLoop: function() {
       clearInterval(this.interval);
+
+      // TODO: Get username
+
+      var user = {};
+      user.username = "Anna";
+      user.score = WeatherMan.score;
+
+      $.ajax({
+        type: 'POST',
+        url: document.URL + 'highscores',
+        data: JSON.stringify(user),
+        contentType: 'application/json',
+        success: function(result) {
+          highscores = result;
+          console.log('Posted Score to database.');
+          console.log(result);
+          // TODO: Display results nicely
+        }
+      });
+
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       WeatherMan.ctx.font = "50px Arial";
       WeatherMan.ctx.fillStyle = "#000066";
@@ -288,7 +308,7 @@
     }
   };
   window.onload = function() {
-    //This is the main method
+    // This is the main method
     WeatherMan.init();
   };
 })();
