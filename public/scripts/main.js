@@ -108,6 +108,7 @@
                 var gameLoop = WeatherMan.startLoop();
                 WeatherMan.playing = 1;
             }
+            break;
         }
       }, false);
     },
