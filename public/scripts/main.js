@@ -234,6 +234,12 @@
         }
       }
       man.drawMan();
+
+      WeatherMan.ctx.beginPath();
+      WeatherMan.ctx.fillStyle = "#000066";
+      WeatherMan.ctx.font = " 20px Arial";
+      WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 750, 50);
+      WeatherMan.ctx.closePath();
        
       obstacle.velocity = obstacle.velocity + obstacle.acceleration;
       obstacle.x = obstacle.x - obstacle.velocity;
@@ -270,6 +276,7 @@
     },
     stopLoop: function() {
       clearInterval(this.interval);
+      WeatherMan.ctx.clearRect(750, 0, 850, 100);
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       WeatherMan.ctx.font = "50px Arial";
       WeatherMan.ctx.fillStyle = "#000066";
