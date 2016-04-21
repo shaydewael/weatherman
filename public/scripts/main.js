@@ -3,17 +3,21 @@
 
   var settings;
   var img;
+  var rand;
   
   var coin = {
     radius: 20,
-    y: 400,
+    y: 420,
     x: 850,
     velocity: 5,
+    mult: 1.0,
     
     drawCoin: function(e) {
       img = new Image();
       img.src = "images/snowflake.png";
-      WeatherMan.ctx.drawImage(img,coin.x,coin.y);
+      
+
+      WeatherMan.ctx.drawImage(img,coin.x,coin.y * coin.mult);
     }
   }
   var obstacle = {
@@ -51,7 +55,7 @@
     },
     jump: function() {
       if (man.inAir == 0) {
-        man.velocity = 30;
+        man.velocity = 40;
         man.inAir = 1;
       }
     }
@@ -105,8 +109,8 @@
 
       WeatherMan.ctx.fillStyle=grd;
       WeatherMan.ctx.fillRect(0,0,850,500);
-      WeatherMan.ctx.fillStyle = "#F9F9F9";
-      WeatherMan.ctx.fillRect(0,490,850,10);
+      WeatherMan.ctx.fillStyle = "#f5f1f1";
+      WeatherMan.ctx.fillRect(0,492,850,8);
 
     },
     initListeners: function() {
@@ -270,11 +274,22 @@
       obstacle.drawObstacle();
 
       coin.x = coin.x - coin.velocity;
+
+
       if (coin.x < 150) {
         coin.x = 850;
         WeatherMan.score += 5;
         coin.velocity = WeatherMan.randomInterval(1,10);
+        rand = Math.random();
+        if (rand < 0.3) {
+          coin.mult = 0.4;
+        } else if (rand < 0.6) {
+          coin.mult = 0.7;
+        } else {
+          coin.mult = 1.0;
+        }
       }
+
       coin.drawCoin();
     
       if (obstacle.x < (man.x + man.width) && obstacle.x > man.x) {
