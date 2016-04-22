@@ -45,8 +45,7 @@
     velocity: 0,
 
     drawMan: function(e) {
-      WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
-      WeatherMan.setGradient(); 
+      
       img = new Image();
       img.src = "images/man.png";
       WeatherMan.ctx.drawImage(img,man.x,man.y);
@@ -96,14 +95,31 @@
       WeatherMan.ctx.fillText("Determining weather...", 50, 250);
     },
     setGradient: function() {
+      WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       var grd=WeatherMan.ctx.createLinearGradient(0,0,0,170);
-      grd.addColorStop(0,"#88b3be");
-      grd.addColorStop(1,"#b1d7de");
+
+      if (WeatherMan.settings.weather == 'rain') {
+        grd.addColorStop(0,"#856279");
+        grd.addColorStop(1,"#ba8295");
+
+      } else if (WeatherMan.settings.weather == 'sunny') {
+        grd.addColorStop(0,"#55b8cb");
+        grd.addColorStop(1,"#e3e4c5");
+      } else if (WeatherMan.settings.weather == 'snow') {
+        grd.addColorStop(0,"#88b3be");
+        grd.addColorStop(1,"#b1d7de");
+
+      } else {
+        grd.addColorStop(0,"#210b38");
+        grd.addColorStop(1,"#31295a");
+      } 
 
       WeatherMan.ctx.fillStyle=grd;
       WeatherMan.ctx.fillRect(0,0,850,500);
       WeatherMan.ctx.fillStyle = "#f5f1f1";
       WeatherMan.ctx.fillRect(0,492,850,8);
+
+      man.drawMan();
 
     },
     initListeners: function() {
@@ -252,7 +268,7 @@
       console.log(WeatherMan.settings.weather);
       WeatherMan.setGradient();
 
-      man.drawMan();
+      
 
       WeatherMan.ctx.beginPath();
       WeatherMan.ctx.fillStyle = "#f9f9f9";
