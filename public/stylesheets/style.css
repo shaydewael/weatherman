@@ -43,11 +43,33 @@ h1 {
 .clear {
 	clear: both;
 }
-input.username {
+#user-info {
 	width: 840px;
+	margin: 25px auto;
+}
+input#Username {
+	outline: 0;
+	width: 550px;
 	display: block;
-	margin: 30px auto;
-	padding: 10px 0;
+	padding: 10px;
+	border: 1px solid #CCC;
+	border-radius: 5px;
+	color: #939393;
+	float: left;
+}
+input.submit {
+	width: 200px;
+	float: right;
+	padding: 10px;
+	background-color: #3498db;
+	color: white;
+	border: 0;
+	border-radius: 5px;
+}
+input.submit:hover {
+	background-color: #CCC;
+	color: #939393;
+	cursor: pointer;
 }
 canvas {
 	width: 850px;

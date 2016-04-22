@@ -1,4 +1,5 @@
 var setLocation;
+var setUser;
 
 (function() {
   "use strict";
@@ -12,12 +13,20 @@ var setLocation;
   var gLongitude;
   var locationSet = 0;
   var checkLocation;
+  var user = {};
   
   setLocation = function(lat,long) {
     gLatitude = lat.toString();;
     gLongitude = long.toString();;
     locationSet = 1;
   }
+
+  setUser = function() {
+    if (document.getElementById('Username').value) {
+      user.username = document.getElementById('Username').value;
+    }
+  }
+
   var coin = {
     radius: 20,
     y: 400,
@@ -440,40 +449,37 @@ var setLocation;
     },
     stopLoop: function() {
       clearInterval(this.interval);
-
-      // TODO: Get username
-
-      var user = {};
-      user.username = 'sample';
-
-     // document.getElementById('Username').value; 
-      console.log('USERNAME ' + user.username); 
-      user.score = WeatherMan.score;
-      try {
-        $.ajax({
-          type: 'POST',
-          url: document.URL + 'highscores',
-          data: JSON.stringify(user),
-          contentType: 'application/json',
-          success: function(result) {
-            highscores = result;
-            console.log('Posted Score to database.');
-            console.log(result);
+      if (!user.username) {
+        user.username = 'unnamed weatherman';
+      }
+        console.log('USERNAME: ' + user.username); 
+        user.score = WeatherMan.score;
+        try {
+          $.ajax({
+            type: 'POST',
+            url: document.URL + 'highscores',
+            data: JSON.stringify(user),
+            contentType: 'application/json',
+            success: function(result) {
+              highscores = result;
+              console.log('Posted Score to database.');
+              console.log(result);
           // TODO: Display results nicely
-            WeatherMan.ctx.fillText("High Scores", 75, 100);
-            WeatherMan.ctx.beginPath();
-            WeatherMan.ctx.moveTo(25,110);
-            WeatherMan.ctx.lineTo(300, 110);
-            WeatherMan.ctx.stroke();
-            WeatherMan.ctx.closePath();
-            for (var i = 0; i < 5; i++) {
-                WeatherMan.ctx.fillText(result.data[i].USERNAME + ": " +result.data[i].SCORE, 75, 160 + 60*i);
-            }
+          WeatherMan.ctx.font = " 20px 'Lato'";
+          WeatherMan.ctx.fillText("High Scores", 120, 100);
+          WeatherMan.ctx.beginPath();
+          WeatherMan.ctx.moveTo(25,110);
+          WeatherMan.ctx.lineTo(300, 110);
+          WeatherMan.ctx.stroke();
+          WeatherMan.ctx.closePath();
+          for (var i = 0; i < 5; i++) {
+            WeatherMan.ctx.fillText(result.data[i].USERNAME + ": " +result.data[i].SCORE, 120, 160 + 50*i);
+          }
         }
       });
-      } catch (e) {
+        } catch (e) {
 
-      }
+        }
 
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       WeatherMan.ctx.font = "35px 'Lato'";
