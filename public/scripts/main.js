@@ -26,7 +26,7 @@
     x: 850,
     velocity: 10,
     acceleration: .05,
-  
+
     drawObstacle: function(e) {
       WeatherMan.ctx.beginPath();
       WeatherMan.ctx.rect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
@@ -36,13 +36,13 @@
     }
   }
   var man = {
-      height: 176,
-      width: 59,
-      x: 100,
-      y: 324,
-      inAir: 0,
-      gravity: 4,
-      velocity: 0,
+    height: 176,
+    width: 59,
+    x: 100,
+    y: 324,
+    inAir: 0,
+    gravity: 4,
+    velocity: 0,
 
     drawMan: function(e) {
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
@@ -84,21 +84,16 @@
       weather: null
     },
     init: function() {
-      this.initListeners();
-      this.getLocation();
-  
       WeatherMan.canvas = document.querySelector('canvas');
       WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
+      WeatherMan.ctx.fillStyle="#EEEEEE";
+      WeatherMan.ctx.fillRect(0,0,850,500);
 
-      WeatherMan.setGradient();
 
       WeatherMan.ctx.font = "40px Arial";
       WeatherMan.ctx.fillStyle = "#000066";
-      WeatherMan.ctx.fillText("Welcome to WeatherMan!", 50, 50);
-      WeatherMan.ctx.fillText("Please enable location on your browser", 50, 150);
-      WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 50, 250);
-      WeatherMan.ctx.fillText("Each token you collect is 5 points", 50, 350);
-      WeatherMan.ctx.fillText("Press Enter to Start Playing", 50, 450);
+
+      WeatherMan.ctx.fillText("Determining weather...", 50, 250);
     },
     setGradient: function() {
       var grd=WeatherMan.ctx.createLinearGradient(0,0,0,170);
@@ -112,25 +107,34 @@
 
     },
     initListeners: function() {
+      WeatherMan.setGradient();
+      WeatherMan.ctx.font = "40px Arial";
+      WeatherMan.ctx.fillStyle = "#000066";
+      WeatherMan.ctx.fillText("Welcome to WeatherMan!", 50, 50);
+      WeatherMan.ctx.fillText("Please enable location on your browser", 50, 150);
+      WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 50, 250);
+      WeatherMan.ctx.fillText("Each token you collect is 5 points", 50, 350);
+      WeatherMan.ctx.fillText("Press Enter to Begin", 50, 450);
+
       window.addEventListener('keypress', function(e) {
         var key = e.keyCode;
 
         switch (key) {
           case 32:
-            e.preventDefault();
-            man.jump();
-            break;
+          e.preventDefault();
+          man.jump();
+          break;
           case 13: 
-            if (WeatherMan.playing == 0) {
-                var gameLoop = WeatherMan.startLoop();
-                WeatherMan.playing = 1;
-            }
-            break;
+          if (WeatherMan.playing == 0) {
+            var gameLoop = WeatherMan.startLoop();
+            WeatherMan.playing = 1;
+          }
+          break;
         }
       }, false);
     },
     randomInterval: function(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min; 
+      return Math.floor(Math.random() * (max - min + 1)) + min; 
     },
     getLocation: function() {
       var self = this;
@@ -191,43 +195,45 @@
             Code 26,27,28,29,30 - Cloudy
             Code 31,33 - Clear (Night)
             Code 32,34 - Sunny
-          */
-          var code = result.icon_code;
+            */
+            var code = result.icon_code;
 
-          if (code == 4 || code == 38 || code == 47) {
-            self.settings.weather = 'rain';
-          }
-          else if ((code >= 5 && code <= 10) || code == 17 || code == 18) {
-            self.settings.weather = 'cloudy';
-          }
-          else if (code == 9 || code == 11 || code == 12 || code == 40) {
-            self.settings.weather = 'rain';
-          }
-          else if ((code >= 13 && code <= 16) || code == 25 || code == 42) {
-            self.settings.weather = 'snow';
-          }
-          else if (code == 20 || code == 21 || code == 22) {
-            self.settings.weather = 'cloudy';
-          }
-          else if (code >= 26 && code <= 30) {
-            self.settings.weather = 'cloudy';
-          }
-          else if (code == 32 || code == 34) {
-            self.settings.weather = 'sunny';
-          }
-          else {
+            if (code == 4 || code == 38 || code == 47) {
+              self.settings.weather = 'rain';
+            }
+            else if ((code >= 5 && code <= 10) || code == 17 || code == 18) {
+              self.settings.weather = 'cloudy';
+            }
+            else if (code == 9 || code == 11 || code == 12 || code == 40) {
+              self.settings.weather = 'rain';
+            }
+            else if ((code >= 13 && code <= 16) || code == 25 || code == 42) {
+              self.settings.weather = 'snow';
+            }
+            else if (code == 20 || code == 21 || code == 22) {
+              self.settings.weather = 'cloudy';
+            }
+            else if (code >= 26 && code <= 30) {
+              self.settings.weather = 'cloudy';
+            }
+            else if (code == 32 || code == 34) {
+              self.settings.weather = 'sunny';
+            }
+            else {
             // Default sunny
             self.settings.weather = 'sunny';
           }
 
           settings = self.settings;
+          WeatherMan.initListeners();
         }
       });
     },
     startLoop: function() {
-        this.interval = setInterval(function() {
+
+      this.interval = setInterval(function() {
         WeatherMan.loop();
-        }, 1000 / 25);
+      }, 1000 / 25);
     },
     loop: function() {
       //Start game loop, draw objects and stuff
@@ -242,6 +248,10 @@
           man.velocity = 0;
         }
       }
+
+      console.log(WeatherMan.settings.weather);
+
+
       man.drawMan();
 
       WeatherMan.ctx.beginPath();
@@ -249,7 +259,7 @@
       WeatherMan.ctx.font = " 20px Arial";
       WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 750, 50);
       WeatherMan.ctx.closePath();
-       
+
       obstacle.velocity = obstacle.velocity + obstacle.acceleration;
       obstacle.x = obstacle.x - obstacle.velocity;
       if (obstacle.x < 0 ) {
@@ -286,7 +296,7 @@
       }
 
       coin.drawCoin();
-    
+
       if (obstacle.x < (man.x + man.width) && obstacle.x > man.x) {
         if ((man.y + man.height) >= obstacle.y) {
           WeatherMan.stopLoop(); 
@@ -315,7 +325,6 @@
         }
       });
 
-      WeatherMan.ctx.clearRect(750, 0, 850, 100);
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       WeatherMan.ctx.font = "50px Arial";
       WeatherMan.ctx.fillStyle = "#000066";
@@ -337,6 +346,10 @@
   };
   window.onload = function() {
     // This is the main method
+    WeatherMan.getLocation();
+    //Allow weather data to be retrieved first 
     WeatherMan.init();
+    
+    
   };
 })();
