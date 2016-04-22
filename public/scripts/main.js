@@ -127,13 +127,16 @@
     },
     initListeners: function() {
       WeatherMan.setGradient();
-      WeatherMan.ctx.font = "40px Arial";
-      WeatherMan.ctx.fillStyle = "#000066";
-      WeatherMan.ctx.fillText("Welcome to WeatherMan!", 50, 50);
-      WeatherMan.ctx.fillText("Please enable location on your browser", 50, 150);
-      WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 50, 250);
-      WeatherMan.ctx.fillText("Each token you collect is 5 points", 50, 350);
-      WeatherMan.ctx.fillText("Press Enter to Begin", 50, 450);
+      WeatherMan.ctx.globalAlpha = 0.9;
+      WeatherMan.ctx.font = "35px 'Lato'";
+      WeatherMan.ctx.fillStyle = "#f9f9f9";
+      WeatherMan.ctx.fillText("Welcome to WeatherMan!", 100, 100);
+      WeatherMan.ctx.fillText("Please enable location on your browser", 100, 150);
+      WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 100, 200);
+      WeatherMan.ctx.fillText("Each token you collect is 5 points", 100, 250);
+      WeatherMan.ctx.font = "45px 'Lato'";
+      WeatherMan.ctx.fillText("Press Enter to Begin", 100, 400);
+      WeatherMan.ctx.globalAlpha = 1.0;
 
       window.addEventListener('keypress', function(e) {
         var key = e.keyCode;
@@ -272,11 +275,11 @@
       WeatherMan.setGradient();
 
       
-  WeatherMan.ctx.globalAlpha = 0.9;
+      WeatherMan.ctx.globalAlpha = 0.9;
       WeatherMan.ctx.beginPath();
 
       WeatherMan.ctx.fillStyle = "#f9f9f9";
-      WeatherMan.ctx.font = " 20px Arial";
+      WeatherMan.ctx.font = " 20px 'Lato'";
       WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 750, 50);
       WeatherMan.ctx.closePath();
       WeatherMan.ctx.globalAlpha = 1.0;
@@ -349,9 +352,9 @@
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       WeatherMan.ctx.font = "35px 'Lato'";
       WeatherMan.ctx.fillStyle = "#939393";
-      WeatherMan.ctx.fillText("Game Over", 345, 100);
-      WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 355, 200);
-      WeatherMan.ctx.fillText("Press Enter to play again", 250, 300);
+      WeatherMan.ctx.fillText("Game Over", 345, 150);
+      WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 355, 250);
+      WeatherMan.ctx.fillText("Press Enter to play again", 250, 350);
       WeatherMan.playing = 0;
       WeatherMan.score = 0;
       coin.x = 850;
