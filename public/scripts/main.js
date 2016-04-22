@@ -195,10 +195,10 @@
           var code = result.icon_code;
 
           if (code == 4 || code == 38 || code == 47) {
-            self.settings.weather = 'thunderstorm';
+            self.settings.weather = 'rain';
           }
           else if ((code >= 5 && code <= 10) || code == 17 || code == 18) {
-            self.settings.weather = 'sleet';
+            self.settings.weather = 'cloudy';
           }
           else if (code == 9 || code == 11 || code == 12 || code == 40) {
             self.settings.weather = 'rain';
@@ -207,16 +207,10 @@
             self.settings.weather = 'snow';
           }
           else if (code == 20 || code == 21 || code == 22) {
-            self.settings.weather = 'fog';
-          }
-          else if (code == 19 || code == 24) {
-            self.settings.weather = 'wind';
+            self.settings.weather = 'cloudy';
           }
           else if (code >= 26 && code <= 30) {
             self.settings.weather = 'cloudy';
-          }
-          else if (code == 31 || code == 33) {
-            self.settings.weather = 'clear';
           }
           else if (code == 32 || code == 34) {
             self.settings.weather = 'sunny';
@@ -260,9 +254,9 @@
       obstacle.x = obstacle.x - obstacle.velocity;
       if (obstacle.x < 0 ) {
         obstacle.x = 850;
-        obstacle.velocity = WeatherMan.randomInterval(10, 60)
-        obstacle.height = WeatherMan.randomInterval(25, 50);
-        obstacle.width = WeatherMan.randomInterval(25, 50);
+        obstacle.velocity = WeatherMan.randomInterval(10, 55)
+        obstacle.height = WeatherMan.randomInterval(25, 60);
+        obstacle.width = WeatherMan.randomInterval(25, 60);
         obstacle.y = 500 - obstacle.height;
         WeatherMan.score++;
       }
