@@ -291,7 +291,7 @@
       obstacle.x = obstacle.x - obstacle.velocity;
       if (obstacle.x < 0 ) {
         obstacle.x = 850;
-        obstacle.velocity = WeatherMan.randomInterval(10, 55)
+        obstacle.velocity = WeatherMan.randomInterval(10, 45)
         obstacle.height = WeatherMan.randomInterval(25, 60);
         obstacle.width = WeatherMan.randomInterval(25, 60);
         obstacle.y = 500 - obstacle.height;
@@ -305,14 +305,23 @@
       }
 
       obstacle.drawObstacle();
-
       coin.x = coin.x - coin.velocity;
       
-      if (coin.x < 150) {
+      if ((coin.x <= (man.x + man.width)) && (coin.x >= man.x) && ((coin.y + (coin.radius*2)) >= man.y) && ((coin.y + (coin.radius*2)) <= (man.y + man.height))) {
         coin.x = 850;
         WeatherMan.score += 5;
-        coin.velocity = WeatherMan.randomInterval(1,10);
+        coin.velocity = WeatherMan.randomInterval(2,10);
         rand = Math.random();
+        if (rand < 0.3) {
+          coin.mult = 0.4;
+        } else if (rand < 0.6) {
+          coin.mult = 0.7;
+        } else {
+          coin.mult = 1.0;
+        }
+      } else if (coin.x < man.x) {
+        coin.x = 850;
+        coin.velocity = WeatherMan.randomInterval(2,10);
         if (rand < 0.3) {
           coin.mult = 0.4;
         } else if (rand < 0.6) {
