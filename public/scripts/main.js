@@ -12,10 +12,11 @@
     x: 850,
     velocity: 5,
     mult: 1.0,
+    url: null,
     
     drawCoin: function(e) {
       img = new Image();
-      img.src = "images/snowflake.png";
+      img.src = coin.url;
       WeatherMan.ctx.drawImage(img,coin.x,coin.y * coin.mult);
     }
   }
@@ -102,17 +103,19 @@
       var grd=WeatherMan.ctx.createLinearGradient(0,0,0,170);
 
       if (WeatherMan.settings.weather == 'rain') {
+        coin.url = "images/rain.png"
         grd.addColorStop(0,"#856279");
         grd.addColorStop(1,"#ba8295");
-
       } else if (WeatherMan.settings.weather == 'sunny') {
+        coin.url = "images/sun.png"
         grd.addColorStop(0,"#55b8cb");
         grd.addColorStop(1,"#e3e4c5");
       } else if (WeatherMan.settings.weather == 'snow') {
+        coin.url = "images/snowflake.png"
         grd.addColorStop(0,"#88b3be");
         grd.addColorStop(1,"#b1d7de");
-
       } else {
+        coin.url = "images/snowflake.png"
         grd.addColorStop(0,"#210b38");
         grd.addColorStop(1,"#31295a");
       } 
