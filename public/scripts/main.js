@@ -45,10 +45,13 @@
     velocity: 0,
 
     drawMan: function(e) {
+      WeatherMan.ctx.globalAlpha = 0.9;
       
       img = new Image();
-      img.src = "images/man.png";
+      img.src = "images/light-man.png";
       WeatherMan.ctx.drawImage(img,man.x,man.y);
+
+      WeatherMan.ctx.globalAlpha = 1.0;
       
     },
     jump: function() {
@@ -89,10 +92,10 @@
       WeatherMan.ctx.fillRect(0,0,850,500);
 
 
-      WeatherMan.ctx.font = "40px Arial";
-      WeatherMan.ctx.fillStyle = "#000066";
+      WeatherMan.ctx.font = "35px 'Lato'";
+      WeatherMan.ctx.fillStyle = "#939393";
 
-      WeatherMan.ctx.fillText("Determining weather...", 50, 250);
+      WeatherMan.ctx.fillText("Determining weather...", 250, 250);
     },
     setGradient: function() {
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
@@ -269,12 +272,14 @@
       WeatherMan.setGradient();
 
       
-
+  WeatherMan.ctx.globalAlpha = 0.9;
       WeatherMan.ctx.beginPath();
+
       WeatherMan.ctx.fillStyle = "#f9f9f9";
       WeatherMan.ctx.font = " 20px Arial";
       WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 750, 50);
       WeatherMan.ctx.closePath();
+      WeatherMan.ctx.globalAlpha = 1.0;
 
       obstacle.velocity = obstacle.velocity + obstacle.acceleration;
       obstacle.x = obstacle.x - obstacle.velocity;
@@ -342,11 +347,11 @@
       });
 
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
-      WeatherMan.ctx.font = "50px Arial";
-      WeatherMan.ctx.fillStyle = "#000066";
-      WeatherMan.ctx.fillText("Game Over", 250, 100);
-      WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 250, 200);
-      WeatherMan.ctx.fillText("Press Enter to play again", 150, 300);
+      WeatherMan.ctx.font = "35px 'Lato'";
+      WeatherMan.ctx.fillStyle = "#939393";
+      WeatherMan.ctx.fillText("Game Over", 345, 100);
+      WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 355, 200);
+      WeatherMan.ctx.fillText("Press Enter to play again", 250, 300);
       WeatherMan.playing = 0;
       WeatherMan.score = 0;
       coin.x = 850;
