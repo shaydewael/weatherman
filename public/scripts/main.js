@@ -444,7 +444,8 @@ var setLocation;
       // TODO: Get username
 
       var user = {};
-      user.username = "Anna";
+      user.username = document.getElementById('Username').value; 
+      console.log('USERNAME ' + user.username); 
       user.score = WeatherMan.score;
       try {
         $.ajax({
@@ -457,6 +458,15 @@ var setLocation;
             console.log('Posted Score to database.');
             console.log(result);
           // TODO: Display results nicely
+            WeatherMan.ctx.fillText("High Scores", 75, 100);
+            WeatherMan.ctx.beginPath();
+            WeatherMan.ctx.moveTo(25,110);
+            WeatherMan.ctx.lineTo(300, 110);
+            WeatherMan.ctx.stroke();
+            WeatherMan.ctx.closePath();
+            for (var i = 0; i < 5; i++) {
+                WeatherMan.ctx.fillText(result.data[i].USERNAME + ": " +result.data[i].SCORE, 75, 160 + 60*i);
+            }
         }
       });
       } catch (e) {
