@@ -444,7 +444,9 @@ var setLocation;
       // TODO: Get username
 
       var user = {};
-      user.username = document.getElementById('Username').value; 
+      user.username = 'sample';
+
+     // document.getElementById('Username').value; 
       console.log('USERNAME ' + user.username); 
       user.score = WeatherMan.score;
       try {

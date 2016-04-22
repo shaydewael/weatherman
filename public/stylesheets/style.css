@@ -40,6 +40,9 @@ h1 {
 	background-color: #3498db;
 	color: #f9f9f9;
 }
+.clear {
+	clear: both;
+}
 canvas {
 	width: 850px;
 	height: 500px;
