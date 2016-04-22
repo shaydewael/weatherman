@@ -251,7 +251,7 @@
       man.drawMan();
 
       WeatherMan.ctx.beginPath();
-      WeatherMan.ctx.fillStyle = "#000066";
+      WeatherMan.ctx.fillStyle = "#f9f9f9";
       WeatherMan.ctx.font = " 20px Arial";
       WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 750, 50);
       WeatherMan.ctx.closePath();
