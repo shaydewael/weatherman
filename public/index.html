@@ -12,18 +12,29 @@
     <!--Styles-->
     <link rel="stylesheet" href="stylesheets/style.css">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,400italic' rel='stylesheet' type='text/css'>
-  </head>
-
-  <body>
-    <h1>Weatherman</h1>
-    <canvas width="850px" height="500px" id="weatherman"></canvas>
-  </body>
-
-  <!--Library Includes-->
+      <!--Library Includes-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 
   <!--Javascripts-->
   <script src="scripts/cloudgen.js"></script>
   <script src="scripts/main.js"></script>
+  </head>
+
+  <body>
+    <div id="title">
+      <h1>Weatherman</h1>
+      <ul id="locations">
+        <li><a onclick="setLocation(40.71,74.01)" href="javascript:void(0)">NYC</a></li>
+        <li><a onclick="setLocation(37.77,122.42)" href="javascript:void(0)">San Francisco</a></li>
+        <li><a onclick="setLocation(51.51,0.13)" href="javascript:void(0)">London</a></li>
+        <li><a onclick="setLocation(37.81,144.96)" href="javascript:void(0)">Melbourne</a></li>
+        <li><a onclick="setLocation(39.90,116.41)" href="javascript:void(0)">Beijing</a></li>
+      </ul>
+    </div>
+    <canvas width="850px" height="500px" id="weatherman"></canvas>
+   
+  </body>
+
+
 
 </html>

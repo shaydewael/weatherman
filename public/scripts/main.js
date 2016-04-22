@@ -1,3 +1,5 @@
+var setLocation;
+
 (function() {
   "use strict";
 
@@ -6,6 +8,16 @@
   var img;
   var rand;
 
+  var gLatitude;
+  var gLongitude;
+  var locationSet = 0;
+  var checkLocation;
+  
+  setLocation = function(lat,long) {
+    gLatitude = lat.toString();;
+    gLongitude = long.toString();;
+    locationSet = 1;
+  }
   var coin = {
     radius: 20,
     y: 400,
@@ -94,6 +106,7 @@
       weather: null
     },
     init: function() {
+
       WeatherMan.canvas = document.querySelector('canvas');
       WeatherMan.ctx = WeatherMan.canvas.getContext("2d");
       WeatherMan.ctx.fillStyle="#EEEEEE";
@@ -108,7 +121,6 @@
     setGradient: function() {
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       var grd=WeatherMan.ctx.createLinearGradient(0,0,0,170);
-      console.log(WeatherMan.settings.weather);
 
       if (WeatherMan.settings.weather == 'rain') {
         coin.url = "images/rain.png"
@@ -143,10 +155,11 @@
 
     },
     initListeners: function() {
-      WeatherMan.setGradient();
+      WeatherMan.ctx.fillStyle="#EEEEEE";
+      WeatherMan.ctx.fillRect(0,0,850,500);
       WeatherMan.ctx.globalAlpha = 0.9;
       WeatherMan.ctx.font = "35px 'Lato'";
-      WeatherMan.ctx.fillStyle = "#f9f9f9";
+      WeatherMan.ctx.fillStyle = "#939393";
       WeatherMan.ctx.fillText("Welcome to WeatherMan!", 100, 100);
       WeatherMan.ctx.fillText("Please enable location on your browser", 100, 150);
       WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 100, 200);
@@ -165,6 +178,9 @@
           break;
           case 13: 
           if (WeatherMan.playing == 0) {
+            $("#locations").hide();
+            $("h1").css("float", "");
+            $("h1").css("text-align", "center");
             var gameLoop = WeatherMan.startLoop();
             WeatherMan.playing = 1;
           }
@@ -187,6 +203,7 @@
         self.settings.latitude = pos.coords.latitude.toFixed(2);
         self.settings.longitude = pos.coords.longitude.toFixed(2);
         self.getWeather();
+        self.initListeners();
       }
 
       function error(err) {
@@ -194,6 +211,7 @@
         self.settings.latitude = 40.43;
         self.settings.longitude = -86.91;
         self.getWeather();
+        self.initListeners();
       }
 
       if (navigator.geolocation) {
@@ -204,7 +222,21 @@
         self.settings.latitude = 40.43;
         self.settings.longitude = -86.91;
         self.getWeather();
+        self.initListeners();
       }
+    },
+    changeLocation: function(long,lat) {
+      clearInterval(checkLocation);
+      locationSet = 0;
+      WeatherMan.settings.latitude = lat;
+      WeatherMan.settings.longitude = long;
+      $("#locations").hide();
+      $("h1").css("float", "");
+      $("h1").css("text-align", "center");
+      WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
+      WeatherMan.init();
+      WeatherMan.getWeather();
+      WeatherMan.initListeners();
     },
     getWeather: function() {
       var self = this;
@@ -217,6 +249,8 @@
         latitude: this.settings.latitude,
         longitude: this.settings.longitude
       }
+
+      console.log(location);
 
       $.get({
         url: document.URL + 'weather',
@@ -264,7 +298,7 @@
           }
 
           settings = self.settings;
-          WeatherMan.initListeners();
+          
         }
       });
     },
@@ -412,26 +446,32 @@
       var user = {};
       user.username = "Anna";
       user.score = WeatherMan.score;
-
-      $.ajax({
-        type: 'POST',
-        url: document.URL + 'highscores',
-        data: JSON.stringify(user),
-        contentType: 'application/json',
-        success: function(result) {
-          highscores = result;
-          console.log('Posted Score to database.');
-          console.log(result);
+      try {
+        $.ajax({
+          type: 'POST',
+          url: document.URL + 'highscores',
+          data: JSON.stringify(user),
+          contentType: 'application/json',
+          success: function(result) {
+            highscores = result;
+            console.log('Posted Score to database.');
+            console.log(result);
           // TODO: Display results nicely
         }
       });
+      } catch (e) {
+
+      }
 
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       WeatherMan.ctx.font = "35px 'Lato'";
       WeatherMan.ctx.fillStyle = "#939393";
-      WeatherMan.ctx.fillText("Game Over", 345, 150);
-      WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 355, 250);
-      WeatherMan.ctx.fillText("Press Enter to play again", 250, 350);
+      WeatherMan.ctx.fillText("Game Over", 600, 100);
+      WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 650, 160);
+      WeatherMan.ctx.fillText("Press Enter to play again", 400, 220);
+      $("#locations").show();
+      $("h1").css("float", "left");
+      $("h1").css("text-align", "left");
       WeatherMan.playing = 0;
       WeatherMan.score = 0;
       man.currentVelocity = 35;
@@ -448,11 +488,21 @@
       obstacle.minVelocity = 10;
       obstacle.maxVelocity = 20;
       obstacle.acceleration = .05;
+
+
+      checkLocation = setInterval(function(){ if (locationSet == 1) {
+        try {
+          WeatherMan.changeLocation(gLongitude,gLatitude);
+        } catch(e) {
+
+        }
+      }}, 200);
     }
   };
   window.onload = function() {
     // This is the main method
     WeatherMan.getLocation();
+    $("#locations").hide();
     //Allow weather data to be retrieved first 
     WeatherMan.init();
     
