@@ -250,7 +250,7 @@
       }
 
       console.log(WeatherMan.settings.weather);
-
+      WeatherMan.setGradient();
 
       man.drawMan();
 
