@@ -5,7 +5,7 @@
   var highscores;
   var img;
   var rand;
-  
+
   var coin = {
     radius: 20,
     y: 400,
@@ -17,7 +17,7 @@
     drawCoin: function(e) {
       img = new Image();
       img.src = coin.url;
-      WeatherMan.ctx.drawImage(img,coin.x,coin.y * coin.mult);
+      WeatherMan.ctx.drawImage(img,coin.x,coin.y);
     }
   }
   var obstacle = {
@@ -25,13 +25,18 @@
     width: 25,
     y: 475,
     x: 850,
+    minVelocity: 10,
+    maxVelocity: 20,
     velocity: 10,
+    lengthMin: 20,
+    lengthMax: 40,
     acceleration: .05,
+    color: '#000066',
 
     drawObstacle: function(e) {
       WeatherMan.ctx.beginPath();
       WeatherMan.ctx.rect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-      WeatherMan.ctx.fillStyle = "#000066";
+      WeatherMan.ctx.fillStyle = obstacle.color;
       WeatherMan.ctx.fill();
       WeatherMan.ctx.closePath();
     }
@@ -44,6 +49,7 @@
     inAir: 0,
     gravity: 4,
     velocity: 0,
+    currentVelocity: 35,
 
     drawMan: function(e) {
       WeatherMan.ctx.globalAlpha = 0.9;
@@ -57,7 +63,7 @@
     },
     jump: function() {
       if (man.inAir == 0) {
-        man.velocity = 40;
+        man.velocity = man.currentVelocity;
         man.inAir = 1;
       }
     }
@@ -76,6 +82,7 @@
     bottomWall: 0,
     score: 0,
     playing:0,
+    message: null,
     // Settings
     settings: {
       // For canvas
@@ -101,29 +108,36 @@
     setGradient: function() {
       WeatherMan.ctx.clearRect(0, 0, WeatherMan.canvas.width, WeatherMan.canvas.height);
       var grd=WeatherMan.ctx.createLinearGradient(0,0,0,170);
+      console.log(WeatherMan.settings.weather);
 
       if (WeatherMan.settings.weather == 'rain') {
         coin.url = "images/rain.png"
         grd.addColorStop(0,"#856279");
         grd.addColorStop(1,"#ba8295");
+        obstacle.color = '#856279';
       } else if (WeatherMan.settings.weather == 'sunny') {
         coin.url = "images/sun.png"
-        grd.addColorStop(0,"#55b8cb");
-        grd.addColorStop(1,"#e3e4c5");
+        grd.addColorStop(0,"#61c5d8");
+        grd.addColorStop(1,"#97eeff");
+        obstacle.color = '#55b8cb';
       } else if (WeatherMan.settings.weather == 'snow') {
         coin.url = "images/snowflake.png"
         grd.addColorStop(0,"#88b3be");
         grd.addColorStop(1,"#b1d7de");
+        obstacle.color = '#88b3be';
       } else {
-        coin.url = "images/snowflake.png"
+        coin.url = "images/cloud.png"
         grd.addColorStop(0,"#210b38");
-        grd.addColorStop(1,"#31295a");
+        grd.addColorStop(1,"#423970");
+        obstacle.color = '#210b38';
       } 
 
       WeatherMan.ctx.fillStyle=grd;
       WeatherMan.ctx.fillRect(0,0,850,500);
+      WeatherMan.ctx.globalAlpha = 0.7;
       WeatherMan.ctx.fillStyle = "#f5f1f1";
       WeatherMan.ctx.fillRect(0,492,850,8);
+      WeatherMan.ctx.globalAlpha = 1.0;
 
       man.drawMan();
 
@@ -136,7 +150,7 @@
       WeatherMan.ctx.fillText("Welcome to WeatherMan!", 100, 100);
       WeatherMan.ctx.fillText("Please enable location on your browser", 100, 150);
       WeatherMan.ctx.fillText("Each obstacle you jump over is 1 point", 100, 200);
-      WeatherMan.ctx.fillText("Each token you collect is 5 points", 100, 250);
+      WeatherMan.ctx.fillText("Each token you collect is 3 points", 100, 250);
       WeatherMan.ctx.font = "45px 'Lato'";
       WeatherMan.ctx.fillText("Press Enter to Begin", 100, 400);
       WeatherMan.ctx.globalAlpha = 1.0;
@@ -274,26 +288,34 @@
         }
       }
 
-      console.log(WeatherMan.settings.weather);
       WeatherMan.setGradient();
 
       
-      WeatherMan.ctx.globalAlpha = 0.9;
+      WeatherMan.ctx.globalAlpha = 0.85;
+      //Score text
       WeatherMan.ctx.beginPath();
-
       WeatherMan.ctx.fillStyle = "#f9f9f9";
       WeatherMan.ctx.font = " 20px 'Lato'";
       WeatherMan.ctx.fillText("Score: " + WeatherMan.score, 750, 50);
       WeatherMan.ctx.closePath();
+
+      //Message text
+      if (WeatherMan.message) {
+        WeatherMan.ctx.beginPath();
+        WeatherMan.ctx.fillText(WeatherMan.message, 50, 50);
+        WeatherMan.ctx.closePath();
+        WeatherMan.message = null;
+      }
+
       WeatherMan.ctx.globalAlpha = 1.0;
 
       obstacle.velocity = obstacle.velocity + obstacle.acceleration;
       obstacle.x = obstacle.x - obstacle.velocity;
       if (obstacle.x < 0 ) {
         obstacle.x = 850;
-        obstacle.velocity = WeatherMan.randomInterval(10, 45)
-        obstacle.height = WeatherMan.randomInterval(25, 60);
-        obstacle.width = WeatherMan.randomInterval(25, 60);
+        obstacle.velocity = WeatherMan.randomInterval(obstacle.minVelocity, obstacle.maxVelocity);
+        obstacle.height = WeatherMan.randomInterval(obstacle.lengthMin, obstacle.lengthMax);
+        obstacle.width = WeatherMan.randomInterval(obstacle.lengthMin, obstacle.lengthMax);
         obstacle.y = 500 - obstacle.height;
         WeatherMan.score++;
       }
@@ -309,8 +331,8 @@
       
       if ((coin.x <= (man.x + man.width)) && (coin.x >= man.x) && ((coin.y + (coin.radius*2)) >= man.y) && ((coin.y + (coin.radius*2)) <= (man.y + man.height))) {
         coin.x = 850;
-        WeatherMan.score += 5;
-        coin.velocity = WeatherMan.randomInterval(2,10);
+        WeatherMan.score += 3;
+        coin.velocity = WeatherMan.randomInterval(5,10);
         rand = Math.random();
         if (rand < 0.3) {
           coin.mult = 0.4;
@@ -319,9 +341,10 @@
         } else {
           coin.mult = 1.0;
         }
+        coin.y = 400 * coin.mult;
       } else if (coin.x < man.x) {
         coin.x = 850;
-        coin.velocity = WeatherMan.randomInterval(2,10);
+        coin.velocity = WeatherMan.randomInterval(5,10);
         if (rand < 0.3) {
           coin.mult = 0.4;
         } else if (rand < 0.6) {
@@ -329,13 +352,55 @@
         } else {
           coin.mult = 1.0;
         }
+        coin.y = 400 * coin.mult;
       }
+
 
       coin.drawCoin();
 
       if (obstacle.x < (man.x + man.width) && obstacle.x > man.x) {
         if ((man.y + man.height) >= obstacle.y) {
           WeatherMan.stopLoop(); 
+        }
+      }
+
+      if (WeatherMan.score > 20 && WeatherMan.score <= 27) {
+        obstacle.minVelocity = 20;
+        obstacle.maxVelocity = 30;
+        if (!WeatherMan.message) {
+          WeatherMan.message = "Score passed 20. Speeding up!";
+        }
+      }
+      else if (WeatherMan.score > 50 && WeatherMan.score <= 57) {
+        obstacle.lengthMin = 30;
+        obstacle.lengthMax = 60;
+        man.currentVelocity = 40;
+        if (!WeatherMan.message) {
+          WeatherMan.message = "Score passed 50. Obstacles are getting larger!";
+        }
+      }
+      else if (WeatherMan.score > 75 && WeatherMan.score <= 82) {
+        obstacle.minVelocity = 30;
+        obstacle.maxVelocity = 40;
+        if (!WeatherMan.message) {
+          WeatherMan.message = "Score passed 75. Speeding up even faster!";
+        }
+      }
+      else if (WeatherMan.score > 100 && WeatherMan.score <= 107) {
+        obstacle.lengthMin = 55;
+        obstacle.lengthMax = 80;
+        man.currentVelocity = 45;
+        if (!WeatherMan.message) {
+          WeatherMan.message = "Score passed 100. Obstacles are getting larger!";
+        }
+      }
+      else if (WeatherMan.score > 125 && WeatherMan.score <= 135) {
+        obstacle.minVelocity = 40;
+        obstacle.maxVelocity = 46;
+        obstacle.lengthMin = 75;
+        obstacle.lengthMax = 113;
+        if (!WeatherMan.message) {
+          WeatherMan.message = "Score passed 125. Get ready for hardcore mode!";
         }
       }
     },
@@ -369,6 +434,7 @@
       WeatherMan.ctx.fillText("Press Enter to play again", 250, 350);
       WeatherMan.playing = 0;
       WeatherMan.score = 0;
+      man.currentVelocity = 35;
       coin.x = 850;
       coin.y = 400;
       coin.velocity = 5;
@@ -376,7 +442,11 @@
       obstacle.width = 25;
       obstacle.y = 475;
       obstacle.x = 850;
+      obstacle.lengthMin = 20;
+      obstacle.lengthMax = 40;
       obstacle.velocity = 10;
+      obstacle.minVelocity = 10;
+      obstacle.maxVelocity = 20;
       obstacle.acceleration = .05;
     }
   };
